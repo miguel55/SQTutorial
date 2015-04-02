@@ -21,27 +21,28 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        t1=(TextView) findViewById(R.id.textView);
-        t2=(TextView) findViewById(R.id.textView2);
-        t3=(TextView) findViewById(R.id.textView3);
-        t4=(TextView) findViewById(R.id.textView4);
-        t5=(TextView) findViewById(R.id.textView5);
-        t6=(TextView) findViewById(R.id.textView6);
+        t1 = (TextView) findViewById(R.id.textView);
+        t2 = (TextView) findViewById(R.id.textView2);
+        t3 = (TextView) findViewById(R.id.textView3);
+        t4 = (TextView) findViewById(R.id.textView4);
+        t5 = (TextView) findViewById(R.id.textView5);
+        t6 = (TextView) findViewById(R.id.textView6);
+
         //Se abre la base de datos en modo lectura/escritura
         AlumnosSQLiteHelper bdAlumnos =
                 new AlumnosSQLiteHelper(this, "Alumnos", null, 2);
         SQLiteDatabase dbw = bdAlumnos.getWritableDatabase();
         // Se genera el ArrayList con 3 alumnos
-        lista=new ArrayList();
+        lista = new ArrayList();
         lista.add("INSERT INTO Alumnos (numero,dni,nombre) " +
-                    "VALUES ("+1+",'11111111A','Juan')");
+                "VALUES (" + 1 + ",'11111111A','Juan')");
         lista.add("INSERT INTO Alumnos (numero,dni,nombre) " +
-                "VALUES ("+2+",'22222222B','Antonio')");
+                "VALUES (" + 2 + ",'22222222B','Antonio')");
         lista.add("INSERT INTO Alumnos (numero,dni,nombre) " +
-                "VALUES ("+3+",'33333333C','Jose')");
+                "VALUES (" + 3 + ",'33333333C','Jose')");
 
         //Se insertan los alumnos mediante una transacción, si la base de datos se ha creado con éxito
-        if(lista != null && lista.size() > 0) {
+        if (lista != null && lista.size() > 0) {
             if (dbw != null) {
                 dbw.beginTransaction();
                 for (int i = 0; i < lista.size(); i++) {
@@ -53,22 +54,25 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Consulta del DNI del alumno Juan
-        String[] consultar = new String[] {"dni"};
-        String[] args = new String[] {"Juan"};
+        String[] consultar = new String[]{"dni"};
+        String[] args = new String[]{"Juan"};
         Cursor var1 = dbw.query("Alumnos", consultar, "nombre=?", args, null, null, null);
 
         // Lectura de la consulta mediante el cursor correspondiente
-        String nombre="", dni="";
-        Integer code=0;
+        String nombre = "", dni = "";
+        Integer code = 0;
         //int numEl=var1.getCount(); // Obtención el número de elementos del cursor
-        if (var1.moveToFirst()) {
-            //Recorremos el cursor hasta que no haya más registros
-            do {
-                dni = var1.getString(0);
-            } while(var1.moveToNext());
+        if (var1 != null){
+            if (var1.moveToFirst()) {
+                //Recorremos el cursor hasta que no haya más registros
+                do {
+                    dni = var1.getString(0);
+                } while (var1.moveToNext());
+            }
         }
 
         // Se muestra el resultado de la consulta en el cuadro de texto correspondiente
+        t1.setText("DNI de Juan");
         t2.setText(dni);
 
         // INSERTAR, ACTUALIZAR, ELIMINAR. Método 1.
@@ -90,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Muestra de resultados
+        t3.setText("Nuevos Datos de Jose:");
         t4.setText(nombre+" "+dni+" "+ Integer.toString(code));
 
         // INSERTAR, ACTUALIZAR, ELIMINAR. Método 2.
@@ -122,6 +127,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Muestra de resultados
+        t5.setText("Nueva Entrada, Francisco:");
         t6.setText(nombre+" "+dni+" "+Integer.toString(code));
 
         // Borrado de todas las entradas de la tabla Alumnos. Necesario si se quiere usar el ejemplo
